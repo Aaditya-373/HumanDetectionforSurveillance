@@ -7,9 +7,7 @@ face_cascade = cv.CascadeClassifier('haarcascade_frontalface_default.xml')
 body_cascade = cv.CascadeClassifier('haarcascade_fullbody.xml')
 
 while True:
-    isTrue, frame1 = video_feed.read()
-
-    frame = cv.resize(frame1, (640, 480))
+    isTrue, frame = video_feed.read()
 
     grayscale_frame = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
 
