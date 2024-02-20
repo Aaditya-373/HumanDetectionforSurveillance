@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recorded Videos</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+        }
+
+        .video-container-wrapper {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            border-radius: 25px;
+            background-color: #e0e0e0;
+            /* Slightly darker grey background */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            /* Subtle drop shadow */
+        }
+
+        .video-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            padding: 20px;
+            margin: 25px;
+        }
+
+        .video {
+            width: calc(50% - 20px);
+            margin: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #fff;
+            overflow: hidden;
+        }
+
+        .video video {
+            width: 100%;
+            /* Make sure the video fits within its container */
+            height: auto;
+            /* Maintain aspect ratio */
+            display: block;
+        }
+
+        .video-info {
+            text-align: center;
+            margin-top: 10px;
+            /* Add some space between video and video info */
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Recordings</h1>
+    <div class="video-container-wrapper">
+        <div class="video-container">
+            {% for video in videos %}
+            <div class="video">
+                <video controls>
+                    <source src="{{ video['filepath'] }}" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+                <div class="video-info">
+                    <p>Date and Time: {{ video['datetime'] }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+
+</html>
