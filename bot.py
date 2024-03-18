@@ -20,6 +20,8 @@ CHANNEL_ID = os.environ['CHANNEL_ID']
 
 
 intents = discord.Intents.default()
+
+
 intents.messages = True
 intents.message_content = True
 intents.guilds = True
