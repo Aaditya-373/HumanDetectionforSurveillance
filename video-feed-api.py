@@ -8,14 +8,6 @@ import discord
 from discord.ext import commands, tasks
 import face_recognition
 
-# bot = commands.Bot(command_prefix='!', intents=discord.Intents.default())
-# application_id = '1212064029921779722'
-# public_key = '00e95274adf8b36f31d559c6ef9dd817a59f2d50c5e970124424ce51aed1fa90'
-# # # bot.application_id = application_id
-# # # bot.public_key = public_key
-# bot_token = 'MTIxMjA2NDAyOTkyMTc3OTcyMg.G-mFeN.fLQKZHkWXJX5cxg9eKZw6-T0g3YwW0s1nNGBQ4'
-# channel_id = '1103720652147535956'
-
 
 app = Flask(__name__, template_folder='templates')
 video_feed = cv.VideoCapture(0)
