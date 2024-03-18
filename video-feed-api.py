@@ -4,6 +4,18 @@ import numpy as np
 import os
 import datetime
 import time
+import discord
+from discord.ext import commands, tasks
+import face_recognition
+
+# bot = commands.Bot(command_prefix='!', intents=discord.Intents.default())
+application_id = '1212064029921779722'
+public_key = '00e95274adf8b36f31d559c6ef9dd817a59f2d50c5e970124424ce51aed1fa90'
+# # bot.application_id = application_id
+# # bot.public_key = public_key
+bot_token = 'MTIxMjA2NDAyOTkyMTc3OTcyMg.G-mFeN.fLQKZHkWXJX5cxg9eKZw6-T0g3YwW0s1nNGBQ4'
+channel_id = '1103720652147535956'
+
 
 app = Flask(__name__, template_folder='templates')
 video_feed = cv.VideoCapture(0)
@@ -14,6 +26,8 @@ body_cascade = cv.CascadeClassifier('./cascades/haarcascade_upperbody.xml')
 eye_cascade = cv.CascadeClassifier('./cascades/haarcascade_eye.xml')
 hand_cascade = cv.CascadeClassifier('./cascades/hand.xml')
 
+aaditya_image = face_recognition.load_image_file("Images/aaditya.jpg")
+aaditya_face_encoding = face_recognition.face_encodings(aaditya_image)[0]
 # base_dir = os.path.dirname(os.path.abspath(__file__))
 
 # Define the directory where recorded videos will be saved
@@ -23,9 +37,9 @@ os.makedirs(video_output_path, exist_ok=True)
 
 def generate_frames():
     frame_size = (int(video_feed.get(3)), int(
-        video_feed.get(4)))  # captures webcam frame size
+        video_feed.get(4)))
 
-    fourcc = cv.VideoWriter_fourcc(*"mp4v")  # video format
+    fourcc = cv.VideoWriter_fourcc(*"mp4v")
 
     detection = False
     detection_stopped_time = None
@@ -41,24 +55,31 @@ def generate_frames():
         faces = face_cascade.detectMultiScale(
             grayscale_frame, scaleFactor=1.3, minNeighbors=3, minSize=(30, 30))
         bodies = body_cascade.detectMultiScale(
-            grayscale_frame, scaleFactor=1.3, minNeighbors=3, minSize=(30, 30))
-        eyes = eye_cascade.detectMultiScale(
-            grayscale_frame, scaleFactor=1.3, minNeighbors=3, minSize=(30, 30))
+            grayscale_frame, scaleFactor=2, minNeighbors=1, minSize=(100, 100))
+        # eyes = eye_cascade.detectMultiScale(
+        #     grayscale_frame, scaleFactor=1.3, minNeighbors=3, minSize=(30, 30))
         hands = hand_cascade.detectMultiScale(
             grayscale_frame, scaleFactor=1.3, minNeighbors=4, minSize=(30, 30))
         for x, y, w, h in faces:
             cv.rectangle(frame, (x, y), (x+w, y+h), (255, 0, 0), 4)
+            current_face_encoding = face_recognition.face_encodings(
+                frame, [(y, x+w, y+h, x)])[0]
+            match = face_recognition.compare_faces(
+                [aaditya_face_encoding], current_face_encoding)
+
+            if match[0]:  # If the detected face matches the reference face
+                print("No unknown face detected")
 
         for x, y, w, h in bodies:
             cv.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 4)
 
-        for x, y, w, h in eyes:
-            cv.rectangle(frame, (x, y), (x+w, y+h), (0, 0, 255), 4)
+        # for x, y, w, h in eyes:
+        #     cv.rectangle(frame, (x, y), (x+w, y+h), (0, 0, 255), 4)
 
         for x, y, w, h in hands:
             cv.rectangle(frame, (x, y), (x+w, y+h), (0, 0, 255), 4)
 
-        if len(faces) + len(eyes)+len(bodies)+len(hands) > 0:
+        if len(faces) + len(bodies)+len(hands) > 0:
             if detection:
                 timer_started = False
             else:
@@ -124,4 +145,5 @@ def recordings():
 
 
 if __name__ == '__main__':
+
     app.run(host='0.0.0.0', port=5000, debug=True)
