@@ -10,6 +10,7 @@ import threading
 import asyncio
 from dotenv import load_dotenv
 
+
 load_dotenv()
 
 application_id = os.environ['DISCORD_APPLICATION_ID']
